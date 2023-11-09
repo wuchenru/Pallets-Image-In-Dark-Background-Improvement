@@ -8,7 +8,7 @@ import sys
 import argparse
 import time
 import dataloader
-import model
+import DarkEnvModel
 import numpy as np
 from torchvision import transforms
 from PIL import Image
@@ -27,7 +27,7 @@ def lowlight(image_path):
 	data_lowlight = data_lowlight.permute(2,0,1)
 	data_lowlight = data_lowlight.cuda().unsqueeze(0)
 
-	DCE_net = model.enhance_net_nopool().cuda()
+	DCE_net = DarkEnvModel.enhance_net_nopool().cuda()
 	DCE_net.load_state_dict(torch.load('snapshots/Epoch99.pth'))
 	start = time.time()
 	_,enhanced_image,_ = DCE_net(data_lowlight)

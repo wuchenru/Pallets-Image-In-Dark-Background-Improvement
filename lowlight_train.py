@@ -8,8 +8,8 @@ import sys
 import argparse
 import time
 import dataloader
-import model
-import Myloss
+import DarkEnvModel
+import DarkEnvLoss
 import numpy as np
 from torchvision import transforms
 
@@ -24,13 +24,11 @@ def weights_init(m):
 
 
 
-
-
 def train(config):
 
 	os.environ['CUDA_VISIBLE_DEVICES']='0'
 
-	DCE_net = model.enhance_net_nopool().cuda()
+	DCE_net = DarkEnvModel.DarkModel().cuda()
 
 	DCE_net.apply(weights_init)
 	if config.load_pretrain == True:
@@ -41,11 +39,11 @@ def train(config):
 
 
 
-	L_color = Myloss.L_color()
-	L_spa = Myloss.L_spa()
+	ColorLoss = DarkEnvLoss.ColorLoss()
+	SpatialLoss = DarkEnvLoss.SpatialLoss()
 
-	L_exp = Myloss.L_exp(16,0.6)
-	L_TV = Myloss.L_TV()
+	ExposureLoss = DarkEnvLoss.ExposureLoss(16,0.6)
+	TVLoss = DarkEnvLoss.TVLoss()
 
 
 	optimizer = torch.optim.Adam(DCE_net.parameters(), lr=config.lr, weight_decay=config.weight_decay)
@@ -59,13 +57,13 @@ def train(config):
 
 			enhanced_image_1,enhanced_image,A  = DCE_net(img_lowlight)
 
-			Loss_TV = 200*L_TV(A)
+			Loss_TV = 200*TVLoss(A)
 			
-			loss_spa = torch.mean(L_spa(enhanced_image, img_lowlight))
+			loss_spa = torch.mean(SpatialLoss(enhanced_image, img_lowlight))
 
-			loss_col = 5*torch.mean(L_color(enhanced_image))
+			loss_col = 5*torch.mean(ColorLoss(enhanced_image))
 
-			loss_exp = 10*torch.mean(L_exp(enhanced_image))
+			loss_exp = 10*torch.mean(ExposureLoss(enhanced_image))
 			
 			
 			# best_loss

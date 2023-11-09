@@ -8,8 +8,8 @@ import sys
 import argparse
 import time
 import dataloader
-import model
-import Myloss
+import DarkEnvModel
+import DarkEnvLoss
 import numpy as np
 from torchvision import transforms
 
@@ -30,7 +30,7 @@ def train(config):
 
 	os.environ['CUDA_VISIBLE_DEVICES']='0'
 
-	DCE_net = model.enhance_net_nopool().cuda()
+	DCE_net = DarkEnvModel.enhance_net_nopool().cuda()
 
 	DCE_net.apply(weights_init)
 	if config.load_pretrain == True:
@@ -41,11 +41,11 @@ def train(config):
 
 
 
-	L_color = Myloss.L_color()
-	L_spa = Myloss.L_spa()
+	L_color = DarkEnvLoss.L_color()
+	L_spa = DarkEnvLoss.L_spa()
 
-	L_exp = Myloss.L_exp(16,0.6)
-	L_TV = Myloss.L_TV()
+	L_exp = DarkEnvLoss.L_exp(16,0.6)
+	L_TV = DarkEnvLoss.L_TV()
 
 
 	optimizer = torch.optim.Adam(DCE_net.parameters(), lr=config.lr, weight_decay=config.weight_decay)
