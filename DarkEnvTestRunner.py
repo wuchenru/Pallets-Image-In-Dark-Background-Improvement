@@ -7,7 +7,7 @@ import os
 import sys
 import argparse
 import time
-import dataloader
+import DarkEnvDataLoader
 import DarkEnvModel
 import numpy as np
 from torchvision import transforms
@@ -18,25 +18,26 @@ import time
 
  
 def lowlight(image_path):
-	os.environ['CUDA_VISIBLE_DEVICES']='0'
+	os.environ['CUDA_VISIBLE_DEVICES']='0' #  first GPU device
+
+	# Load the low-light image
 	data_lowlight = Image.open(image_path)
-
- 
-
 	data_lowlight = (np.asarray(data_lowlight)/255.0)
-
-
 	data_lowlight = torch.from_numpy(data_lowlight).float()
 	data_lowlight = data_lowlight.permute(2,0,1)
 	data_lowlight = data_lowlight.cuda().unsqueeze(0)
 
-	DCE_net = DarkEnvModel.DarkModel().cuda()
-	DCE_net.load_state_dict(torch.load('trained_weights/Epoch99.pth'))
+	# Create and load the Dark Env network model
+	DarkEnvNet = DarkEnvModel.DarkModel().cuda()
+	DarkEnvNet.load_state_dict(torch.load('trained_weights/Epoch99.pth'))
+
 	start = time.time()
-	_,enhanced_image,_ = DCE_net(data_lowlight)
+	_,enhanced_image,_ = DarkEnvNet(data_lowlight)
 
 	end_time = (time.time() - start)
 	print(end_time)
+
+	# output 
 	image_path = image_path.replace('test_data','result')
 	result_path = image_path
 	if not os.path.exists(image_path.replace('/'+image_path.split("/")[-1],'')):

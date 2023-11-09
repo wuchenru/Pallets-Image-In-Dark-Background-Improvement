@@ -7,7 +7,7 @@ import os
 import sys
 import argparse
 import time
-import dataloader
+import DarkEnvDataLoader
 import DarkEnvModel
 import numpy as np
 from torchvision import transforms

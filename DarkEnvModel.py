@@ -16,21 +16,21 @@ class DarkModel(nn.Module):
         # Convolutional Network
 
         # Starts with RGB channels, transforms it into feature channels, stride = 1(step/pixel), padding = 1 to match the size
-		self.conv1 = nn.Conv2d(3, features, 3, 1, 1, bias=True) # 3x3 filter
+		self.e_conv1 = nn.Conv2d(3, features, 3, 1, 1, bias=True) # 3x3 filter
 
         # features input channels, features output channels, 
-		self.conv2 = nn.Conv2d(features, features, 3, 1, 1, bias=True)
-		self.conv3 = nn.Conv2d(features, features, 3, 1, 1, bias=True)
-		self.conv4 = nn.Conv2d(features, features, 3, 1, 1, bias=True)
+		self.e_conv2 = nn.Conv2d(features, features, 3, 1, 1, bias=True)
+		self.e_conv3 = nn.Conv2d(features, features, 3, 1, 1, bias=True)
+		self.e_conv4 = nn.Conv2d(features, features, 3, 1, 1, bias=True)
         
         # concatenated features from 3 and 4
-		self.conv5 = nn.Conv2d(features * 2, features, 3, 1, 1, bias=True)
+		self.e_conv5 = nn.Conv2d(features * 2, features, 3, 1, 1, bias=True)
 
         # concatenated features from 2 and 5
-		self.conv6 = nn.Conv2d(features * 2, features, 3, 1, 1, bias=True)
+		self.e_conv6 = nn.Conv2d(features * 2, features, 3, 1, 1, bias=True)
 
         # concatenated features from 1 and 6
-		self.conv7 = nn.Conv2d(features * 2, 24, 3, 1, 1, bias=True)
+		self.e_conv7 = nn.Conv2d(features * 2, 24, 3, 1, 1, bias=True)
         
         # activation function, ReLU commonly used
 		self.relu = nn.ReLU(inplace=True)

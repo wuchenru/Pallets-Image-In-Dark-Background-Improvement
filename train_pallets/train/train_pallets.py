@@ -7,7 +7,7 @@ import os
 import sys
 import argparse
 import time
-import dataloader
+import DarkEnvDataLoader
 import DarkEnvModel
 import DarkEnvLoss
 import numpy as np
@@ -35,7 +35,7 @@ def train(config):
 	DCE_net.apply(weights_init)
 	if config.load_pretrain == True:
 	    DCE_net.load_state_dict(torch.load(config.pretrain_dir))
-	train_dataset = dataloader.lowlight_loader(config.lowlight_images_path)		
+	train_dataset = DarkEnvDataLoader.lowlight_loader(config.lowlight_images_path)		
 	
 	train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config.train_batch_size, shuffle=True, num_workers=config.num_workers, pin_memory=True)
 
